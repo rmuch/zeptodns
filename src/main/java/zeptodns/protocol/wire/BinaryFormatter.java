@@ -209,7 +209,10 @@ public class BinaryFormatter {
      * @param qs     question section to write
      */
     public static void putQuestionSection(ByteBuffer buffer, QuestionSection qs) {
-        // TODO
+        putSpecialString(buffer, qs.getQuestionName());
+
+        buffer.putShort((short) qs.getQuestionType());
+        buffer.putShort((short) qs.getQuestionClass());
     }
 
     /**
