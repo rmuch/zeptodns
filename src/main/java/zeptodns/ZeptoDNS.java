@@ -6,6 +6,7 @@ import zeptodns.protocol.fluent.MessageBuilder;
 import zeptodns.protocol.messages.Message;
 import zeptodns.protocol.messages.Response;
 
+import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,13 +16,33 @@ import java.util.logging.Logger;
 public class ZeptoDNS implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(ZeptoDNS.class.getName());
 
-    private NioServer server;
-    private QueryHandler queryHandler;
+    private final Server server;
+    private final QueryHandler queryHandler;
 
-    public ZeptoDNS() {
-        server = new NioServer();
+    public ZeptoDNS(Server server, QueryHandler queryHandler) {
+        this.server = server;
+        this.queryHandler = queryHandler;
 
-        queryHandler = query -> {
+        server.setQueryHandler(queryHandler);
+    }
+
+    @Override
+    public void run() {
+        LOGGER.log(Level.INFO, "Starting ZeptoDNS server...");
+
+        server.run();
+    }
+
+    /**
+     * Program entry point.
+     *
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        NioServer server = new NioServer(InetAddress.getLoopbackAddress(), 53);
+
+        // TODO: this is only for testing
+        QueryHandler queryHandler = query -> {
             Message message = MessageBuilder
                     .begin()
                     .asResponse(query.getMessage())
@@ -33,23 +54,7 @@ public class ZeptoDNS implements Runnable {
             return new Response(message);
         };
 
-        server.setQueryHandler(queryHandler);
-    }
-
-    /**
-     * Program entry point.
-     *
-     * @param args command line arguments
-     */
-    public static void main(String[] args) {
-        ZeptoDNS zeptoDns = new ZeptoDNS();
+        ZeptoDNS zeptoDns = new ZeptoDNS(server, queryHandler);
         zeptoDns.run();
-    }
-
-    @Override
-    public void run() {
-        LOGGER.log(Level.INFO, "Starting ZeptoDNS server connection loop...");
-
-        server.run();
     }
 }
