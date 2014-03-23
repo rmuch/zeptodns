@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 public class NioServer implements Server {
     private static final Logger LOGGER = Logger.getLogger(NioServer.class.getName());
 
-    private InetAddress bindAddress;
-    private int bindPort;
+    private final InetAddress bindAddress;
+    private final int bindPort;
 
     private QueryHandler queryHandler;
 
@@ -74,18 +74,16 @@ public class NioServer implements Server {
      */
     private void read(SelectionKey key) throws IOException {
         DatagramChannel channel = (DatagramChannel) key.channel();
-
-
         QueryStateAttachment queryStateAttachment = (QueryStateAttachment) key.attachment();
+
         // clear the request buffer
         queryStateAttachment.getRequestBuffer().clear();
 
+        // receive data and set address
         queryStateAttachment.setRequestAddress(channel.receive(queryStateAttachment.getRequestBuffer()));
 
-
-        //queryStateAttachment.getRequestBuffer().clear();
-
-        queryStateAttachment.getRequestBuffer().rewind(); // TODO: necessary?
+        // read the message
+        queryStateAttachment.getRequestBuffer().flip();
         Message requestMessage = BinaryFormatter.getMessage(queryStateAttachment.getRequestBuffer());
 
         if (queryHandler != null) {

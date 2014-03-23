@@ -57,8 +57,7 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public byte[] getResourceData() {
-        byte[] bytes = inetAddress.getAddress();
-        return bytes;
+        return inetAddress.getAddress();
     }
 
     @Override

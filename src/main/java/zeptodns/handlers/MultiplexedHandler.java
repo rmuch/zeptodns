@@ -9,7 +9,7 @@ import java.util.List;
  * Multiplexed query handler.
  */
 public class MultiplexedHandler implements QueryHandler {
-    private List<QueryHandler> queryHandlers;
+    private final List<QueryHandler> queryHandlers;
 
     public MultiplexedHandler(List<QueryHandler> queryHandlers) {
         this.queryHandlers = queryHandlers;

@@ -15,7 +15,7 @@ public class MessageBuilder implements
         QueryMessageParameterStep,
         ResponseMessageParameterStep {
 
-    private Message message;
+    private final Message message;
 
     private MessageBuilder() {
         message = new Message();
