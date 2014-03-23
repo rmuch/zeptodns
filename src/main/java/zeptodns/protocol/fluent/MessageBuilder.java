@@ -4,6 +4,7 @@ import zeptodns.protocol.messages.ARecord;
 import zeptodns.protocol.messages.Message;
 import zeptodns.protocol.wire.FlagUtils;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -94,7 +95,7 @@ public class MessageBuilder implements
         message.getHeaderSection().setAnswerCount(message.getHeaderSection().getAnswerCount() + 1);
 
         try {
-            ARecord aRecord = new ARecord(name, InetAddress.getByName(addr));
+            ARecord aRecord = new ARecord(name, (Inet4Address) Inet4Address.getByName(addr));
 
             message.getAnswers().add(aRecord);
         } catch (UnknownHostException e) {
@@ -108,5 +109,4 @@ public class MessageBuilder implements
     public Message end() {
         return message;
     }
-
 }

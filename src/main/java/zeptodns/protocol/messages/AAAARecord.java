@@ -1,27 +1,23 @@
 package zeptodns.protocol.messages;
 
-import java.net.Inet4Address;
+import java.net.Inet6Address;
 
-/**
- * Represents an IPv4 "A" record.
- */
-public class ARecord extends ResourceRecord {
+public class AAAARecord extends ResourceRecord {
+    private Inet6Address inetAddress;
 
-    private Inet4Address inetAddress;
-
-    public ARecord() {
+    public AAAARecord() {
     }
 
-    public ARecord(String name, Inet4Address inetAddress) {
+    public AAAARecord(String name, Inet6Address inetAddress) {
         this.setName(name);
         this.inetAddress = inetAddress;
     }
 
-    public Inet4Address getInetAddress() {
+    public Inet6Address getInetAddress() {
         return inetAddress;
     }
 
-    public void setInetAddress(Inet4Address inetAddress) {
+    public void setInetAddress(Inet6Address inetAddress) {
         this.inetAddress = inetAddress;
     }
 
@@ -32,7 +28,7 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public void setType(int type) {
-        throw new IllegalArgumentException("setType may not be called on type ARecord.");
+        throw new IllegalArgumentException("setType may not be called on type AAAARecord.");
     }
 
     @Override
@@ -42,17 +38,17 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public void setClassCode(int classCode) {
-        throw new IllegalArgumentException("setClassCode may not be called on type ARecord.");
+        throw new IllegalArgumentException("setClassCode may not be called on type AAAARecord.");
     }
 
     @Override
     public int getResourceDataLength() {
-        return 4;
+        return 16;
     }
 
     @Override
     public void setResourceDataLength(int resourceDataLength) {
-        throw new IllegalArgumentException("setResourceDataLength may not be called on type ARecord.");
+        throw new IllegalArgumentException("setResourceDataLength may not be called on type AAAARecord.");
     }
 
     @Override
@@ -62,6 +58,6 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public void setResourceData(byte[] resourceData) {
-        throw new IllegalArgumentException("setResourceData may not be called on type ARecord.");
+        throw new IllegalArgumentException("setResourceData may not be called on type AAAARecord.");
     }
 }
