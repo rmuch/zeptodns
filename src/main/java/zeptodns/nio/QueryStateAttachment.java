@@ -4,7 +4,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
 /**
- *
+ * Contains server state data.
  */
 public class QueryStateAttachment {
     // RFC 1035 S 4.2.1 restricts UDP packet size to 512 bytes

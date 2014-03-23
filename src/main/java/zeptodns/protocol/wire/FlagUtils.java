@@ -37,11 +37,11 @@ public class FlagUtils {
     /**
      * Sets a specific flag value.
      *
-     * @param flags
-     * @param offset
-     * @param mask
-     * @param value
-     * @return
+     * @param flags  original flags value
+     * @param offset flag offset
+     * @param mask   flag mask
+     * @param value  new flag value
+     * @return original flags with new flag value applied
      */
     public static int setFlagValue(int flags, int offset, int mask, int value) {
         // Mask value
@@ -59,10 +59,10 @@ public class FlagUtils {
     /**
      * Gets a specific flag value.
      *
-     * @param flags
-     * @param offset
-     * @param mask
-     * @return
+     * @param flags  original flags value
+     * @param offset flag offset
+     * @param mask   flag mask
+     * @return value of a specific flag
      */
     public static int getFlagValue(int flags, int offset, int mask) {
         // shift by offset

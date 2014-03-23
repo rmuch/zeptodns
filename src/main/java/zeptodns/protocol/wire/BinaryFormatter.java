@@ -17,7 +17,7 @@ public class BinaryFormatter {
      * Reads a string from a ByteBuffer.
      *
      * @param buffer the buffer to read from
-     * @return
+     * @return string from the buffer
      */
     public static String getSpecialString(ByteBuffer buffer) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -38,7 +38,7 @@ public class BinaryFormatter {
      * Reads a message from a ByteBuffer.
      *
      * @param buffer the buffer to read from
-     * @return
+     * @return message from the buffer
      */
     public static Message getMessage(ByteBuffer buffer) {
         Message message = new Message();
@@ -78,7 +78,7 @@ public class BinaryFormatter {
      * Reads a header section from a ByteBuffer.
      *
      * @param buffer the buffer to read from
-     * @return
+     * @return header section from the buffer
      */
     public static HeaderSection getHeader(ByteBuffer buffer) {
         buffer.order(ByteOrder.BIG_ENDIAN);
@@ -104,7 +104,7 @@ public class BinaryFormatter {
      * Reads a question section from a ByteBuffer.
      *
      * @param buffer the buffer to read from
-     * @return
+     * @return question section from the buffer
      */
     public static QuestionSection getQuestionSection(ByteBuffer buffer) {
         String name = getSpecialString(buffer);
@@ -119,7 +119,7 @@ public class BinaryFormatter {
      * Reads a resource record from a ByteBuffer.
      *
      * @param buffer the buffer to read from
-     * @return
+     * @return resource record from the buffer
      */
     public static ResourceRecord getResourceRecord(ByteBuffer buffer) {
         String name = getSpecialString(buffer);
@@ -144,6 +144,8 @@ public class BinaryFormatter {
     }
 
     /**
+     * Writes a DNS string to a NIO buffer.
+     *
      * @param buffer the buffer to write to
      * @param string string to write
      */
@@ -159,6 +161,8 @@ public class BinaryFormatter {
     }
 
     /**
+     * Writes a message to a NIO buffer.
+     *
      * @param buffer  the buffer to write to
      * @param message message to write
      */
@@ -183,6 +187,8 @@ public class BinaryFormatter {
     }
 
     /**
+     * Writes a header to a NIO buffer.
+     *
      * @param buffer the buffer to write to
      * @param header header to write
      */
@@ -197,6 +203,8 @@ public class BinaryFormatter {
     }
 
     /**
+     * Writes a question section to a NIO buffer.
+     *
      * @param buffer the buffer to write to
      * @param qs     question section to write
      */
@@ -205,6 +213,8 @@ public class BinaryFormatter {
     }
 
     /**
+     * Writes a resource record to a NIO buffer.
+     *
      * @param buffer the buffer to write to
      * @param res    resource record to write
      */

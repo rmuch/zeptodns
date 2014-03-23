@@ -50,8 +50,10 @@ public class MessageBuilder implements
     }
 
     /**
-     * @param responseCode
-     * @return
+     * Sets the response code value of the message under construction.
+     *
+     * @param responseCode response code value
+     * @return next step in the fluent API
      * @see FlagUtils for RCODE values
      */
     public ResponseMessageParameterStep withResponseCode(int responseCode) {
