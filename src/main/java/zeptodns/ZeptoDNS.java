@@ -22,16 +22,13 @@ public class ZeptoDNS implements Runnable {
         server = new NioServer();
 
         queryHandler = query -> {
-
             Message message = MessageBuilder
                     .begin()
-                    .asResponse()
+                    .asResponse(query.getMessage())
                     .authoritative(true)
                     .withARecord(query.getMessage().getQuestions().get(0).getQuestionName(), "192.168.13.37")
+                    .withARecord(query.getMessage().getQuestions().get(0).getQuestionName(), "192.168.13.38")
                     .end();
-
-            // TODO: Move this to the builder
-            message.getHeaderSection().setId(query.getMessage().getHeaderSection().getId());
 
             return new Response(message);
         };

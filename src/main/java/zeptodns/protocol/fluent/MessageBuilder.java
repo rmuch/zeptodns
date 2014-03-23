@@ -30,6 +30,8 @@ public class MessageBuilder implements
         flags = FlagUtils.setQueryResponse(flags, 0);
         message.getHeaderSection().setFlags(flags);
 
+        // TODO: Set random ID
+
         return this;
     }
 
@@ -37,6 +39,22 @@ public class MessageBuilder implements
         int flags = message.getHeaderSection().getFlags();
         flags = FlagUtils.setQueryResponse(flags, 1);
         message.getHeaderSection().setFlags(flags);
+
+        return this;
+    }
+
+    public ResponseMessageParameterStep asResponse(Message queryMessage) {
+        asResponse();
+
+        message.getHeaderSection().setId(queryMessage.getHeaderSection().getId());
+
+        return this;
+    }
+
+    public ResponseMessageParameterStep asResponse(int id) {
+        asResponse();
+
+        message.getHeaderSection().setId(id);
 
         return this;
     }
