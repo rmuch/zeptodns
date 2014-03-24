@@ -7,6 +7,7 @@ import zeptodns.protocol.wire.FlagUtils;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 /**
  * Provides a fluent API for constructing DNS response packets.
@@ -31,7 +32,11 @@ public class MessageBuilder implements
         flags = FlagUtils.setQueryResponse(flags, 0);
         message.getHeaderSection().setFlags(flags);
 
-        // TODO: Set random ID
+        // set a random id
+        Random random = new Random();
+        int id = random.nextInt() & 0xFFFF;
+
+        message.getHeaderSection().setId(id);
 
         return this;
     }
