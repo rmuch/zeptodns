@@ -1,4 +1,6 @@
-package zeptodns.protocol.messages;
+package zeptodns.protocol.messages.records;
+
+import zeptodns.protocol.messages.ResourceRecord;
 
 import java.net.Inet6Address;
 
