@@ -1,8 +1,8 @@
 package zeptodns.protocol.fluent;
 
-import zeptodns.protocol.messages.records.ARecord;
 import zeptodns.protocol.messages.Message;
 import zeptodns.protocol.messages.QuestionSection;
+import zeptodns.protocol.messages.records.ARecord;
 import zeptodns.protocol.wire.FlagUtils;
 
 import java.net.Inet4Address;

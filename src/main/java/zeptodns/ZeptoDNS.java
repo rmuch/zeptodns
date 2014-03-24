@@ -2,7 +2,6 @@ package zeptodns;
 
 import zeptodns.handlers.NashornHandler;
 import zeptodns.handlers.QueryHandler;
-import zeptodns.handlers.ScriptedHandler;
 import zeptodns.nio.NioServer;
 
 import javax.script.ScriptException;

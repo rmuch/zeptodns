@@ -2,7 +2,6 @@ package zeptodns.handlers;
 
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import zeptodns.protocol.fluent.MessageBuilder;
 import zeptodns.protocol.messages.Message;
 import zeptodns.protocol.messages.Query;
 import zeptodns.protocol.messages.Response;
@@ -27,7 +26,7 @@ public class NashornHandler implements QueryHandler {
 
         scriptSource = FileUtils.readAll(path);
 
-        compiledScript=nashornEngine.compile(scriptSource);
+        compiledScript = nashornEngine.compile(scriptSource);
     }
 
     @Override
