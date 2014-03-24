@@ -19,7 +19,7 @@ public class BinaryFormatter {
      * @param buffer the buffer to read from
      * @return string from the buffer
      */
-    public static String getSpecialString(ByteBuffer buffer) {
+    public static String getOctetString(ByteBuffer buffer) {
         StringBuilder stringBuilder = new StringBuilder();
 
         byte strLen;
@@ -107,7 +107,7 @@ public class BinaryFormatter {
      * @return question section from the buffer
      */
     public static QuestionSection getQuestionSection(ByteBuffer buffer) {
-        String name = getSpecialString(buffer);
+        String name = getOctetString(buffer);
 
         int qtype = (int) buffer.getShort();
         int qclass = (int) buffer.getShort();
@@ -122,7 +122,7 @@ public class BinaryFormatter {
      * @return resource record from the buffer
      */
     public static ResourceRecord getResourceRecord(ByteBuffer buffer) {
-        String name = getSpecialString(buffer);
+        String name = getOctetString(buffer);
 
         int type = (int) buffer.getShort();
         int clasz = (int) buffer.getShort();
@@ -149,7 +149,7 @@ public class BinaryFormatter {
      * @param buffer the buffer to write to
      * @param string string to write
      */
-    public static void putSpecialString(ByteBuffer buffer, String string) {
+    public static void putOctetString(ByteBuffer buffer, String string) {
         String[] parts = string.split("\\.");
 
         for (String part : parts) {
@@ -209,7 +209,7 @@ public class BinaryFormatter {
      * @param qs     question section to write
      */
     public static void putQuestionSection(ByteBuffer buffer, QuestionSection qs) {
-        putSpecialString(buffer, qs.getQuestionName());
+        putOctetString(buffer, qs.getQuestionName());
 
         buffer.putShort((short) qs.getQuestionType());
         buffer.putShort((short) qs.getQuestionClass());
@@ -222,7 +222,7 @@ public class BinaryFormatter {
      * @param res    resource record to write
      */
     public static void putResourceRecord(ByteBuffer buffer, ResourceRecord res) {
-        putSpecialString(buffer, res.getName());
+        putOctetString(buffer, res.getName());
 
         buffer.putShort((short) res.getType());
         buffer.putShort((short) res.getClassCode());
