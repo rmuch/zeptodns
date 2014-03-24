@@ -23,7 +23,7 @@ public class ScriptedHandler implements QueryHandler {
         scriptEngineManager = new ScriptEngineManager();
         scriptEngine = scriptEngineManager.getEngineByName(engineName);
 
-        script = FileUtils.readAll(path, Charset.defaultCharset());
+        script = FileUtils.readAll(path);
     }
 
     @Override

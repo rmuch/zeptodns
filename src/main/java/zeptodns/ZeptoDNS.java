@@ -1,11 +1,12 @@
 package zeptodns;
 
+import zeptodns.handlers.NashornHandler;
 import zeptodns.handlers.QueryHandler;
+import zeptodns.handlers.ScriptedHandler;
 import zeptodns.nio.NioServer;
-import zeptodns.protocol.fluent.MessageBuilder;
-import zeptodns.protocol.messages.Message;
-import zeptodns.protocol.messages.Response;
 
+import javax.script.ScriptException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,18 +42,26 @@ public class ZeptoDNS implements Runnable {
     public static void main(String[] args) {
         NioServer server = new NioServer(InetAddress.getLoopbackAddress(), 53);
 
-        // TODO: this is only for testing
-        QueryHandler queryHandler = query -> {
-            Message message = MessageBuilder
-                    .begin()
-                    .asResponse(query.getMessage())
-                    .authoritative(true)
-                    .withARecord(query.getMessage().getQuestions().get(0).getQuestionName(), "192.168.13.37")
-                    .withARecord(query.getMessage().getQuestions().get(0).getQuestionName(), "192.168.13.38")
-                    .end();
+        // Check arguments
+        if (args.length < 1) {
+            LOGGER.severe("No console arguments provided. Required: java -jar zeptodns.jar [script-path].");
 
-            return new Response(message);
-        };
+            return;
+        }
+
+        // Attempt to set up query handler
+        QueryHandler queryHandler;
+        try {
+            queryHandler = new NashornHandler(args[0]);
+        } catch (IOException e) {
+            LOGGER.severe("Could not read script provided as argument:\n" + e.getMessage());
+
+            return;
+        } catch (ScriptException e) {
+            LOGGER.severe("Error precompiling script:\n" + e.getMessage());
+
+            return;
+        }
 
         ZeptoDNS zeptoDns = new ZeptoDNS(server, queryHandler);
         zeptoDns.run();

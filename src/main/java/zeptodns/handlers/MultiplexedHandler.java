@@ -6,7 +6,8 @@ import zeptodns.protocol.messages.Response;
 import java.util.List;
 
 /**
- * Multiplexed query handler.
+ * Multiplexed query handler which queries handlers in order and returns the first non-null response, or null if no
+ * responses were returned.
  */
 public class MultiplexedHandler implements QueryHandler {
     private final List<QueryHandler> queryHandlers;
