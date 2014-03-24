@@ -15,7 +15,7 @@ public class QueryStateAttachment {
     private SocketAddress requestAddress;
 
     public QueryStateAttachment() {
-        this(ByteBuffer.allocate(512), ByteBuffer.allocate(512), null);
+        this(ByteBuffer.allocate(PACKET_SIZE), ByteBuffer.allocate(PACKET_SIZE), null);
     }
 
     public QueryStateAttachment(ByteBuffer requestBuffer, ByteBuffer responseBuffer, SocketAddress requestAddress) {
