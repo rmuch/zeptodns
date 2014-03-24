@@ -2,10 +2,10 @@ package zeptodns.protocol.fluent;
 
 import zeptodns.protocol.messages.ARecord;
 import zeptodns.protocol.messages.Message;
+import zeptodns.protocol.messages.QuestionSection;
 import zeptodns.protocol.wire.FlagUtils;
 
 import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 
@@ -13,21 +13,29 @@ import java.util.Random;
  * Provides a fluent API for constructing DNS response packets.
  */
 public class MessageBuilder implements
-        QueryResponseStep,
-        QueryMessageParameterStep,
-        ResponseMessageParameterStep {
+        MessageTypeStep,
+        QueryParameterStep,
+        ResponseParameterStep {
 
     private final Message message;
 
+    /**
+     * Initializes a new MessageBuilder with a blank message.
+     */
     private MessageBuilder() {
         message = new Message();
     }
 
-    public static QueryResponseStep begin() {
+    /**
+     * Begins building a DNS protocol message.
+     *
+     * @return message builder
+     */
+    public static MessageTypeStep begin() {
         return new MessageBuilder();
     }
 
-    public QueryMessageParameterStep asQuery() {
+    public QueryParameterStep asQuery() {
         int flags = message.getHeaderSection().getFlags();
         flags = FlagUtils.setQueryResponse(flags, 0);
         message.getHeaderSection().setFlags(flags);
@@ -41,7 +49,7 @@ public class MessageBuilder implements
         return this;
     }
 
-    public ResponseMessageParameterStep asResponse() {
+    public ResponseParameterStep asResponse() {
         int flags = message.getHeaderSection().getFlags();
         flags = FlagUtils.setQueryResponse(flags, 1);
         message.getHeaderSection().setFlags(flags);
@@ -49,7 +57,7 @@ public class MessageBuilder implements
         return this;
     }
 
-    public ResponseMessageParameterStep asResponse(Message queryMessage) {
+    public ResponseParameterStep asResponse(Message queryMessage) {
         asResponse();
 
         message.getHeaderSection().setId(queryMessage.getHeaderSection().getId());
@@ -57,7 +65,7 @@ public class MessageBuilder implements
         return this;
     }
 
-    public ResponseMessageParameterStep asResponse(int id) {
+    public ResponseParameterStep asResponse(int id) {
         asResponse();
 
         message.getHeaderSection().setId(id);
@@ -65,7 +73,7 @@ public class MessageBuilder implements
         return this;
     }
 
-    public ResponseMessageParameterStep authoritative(boolean isAuthoritative) {
+    public ResponseParameterStep authoritative(boolean isAuthoritative) {
         int flags = message.getHeaderSection().getFlags();
         flags = FlagUtils.setAuthoritative(flags, isAuthoritative ? 1 : 0);
         message.getHeaderSection().setFlags(flags);
@@ -73,14 +81,7 @@ public class MessageBuilder implements
         return this;
     }
 
-    /**
-     * Sets the response code value of the message under construction.
-     *
-     * @param responseCode response code value
-     * @return next step in the fluent API
-     * @see FlagUtils for RCODE values
-     */
-    public ResponseMessageParameterStep withResponseCode(int responseCode) {
+    public ResponseParameterStep withResponseCode(int responseCode) {
         int flags = message.getHeaderSection().getFlags();
         flags = FlagUtils.setResponseCode(flags, responseCode);
         message.getHeaderSection().setFlags(flags);
@@ -88,15 +89,16 @@ public class MessageBuilder implements
         return this;
     }
 
-    public QueryMessageParameterStep withQuestion() {
+    public QueryParameterStep withQuestion(String name, int type, int clasz) {
         message.getHeaderSection().setQuestionCount(message.getHeaderSection().getQuestionCount() + 1);
 
-        // TODO
+        QuestionSection questionSection = new QuestionSection(name, type, clasz);
+        message.getQuestions().add(questionSection);
 
         return this;
     }
 
-    public ResponseMessageParameterStep withARecord(String name, String addr) {
+    public ResponseParameterStep withARecord(String name, String addr) {
         message.getHeaderSection().setAnswerCount(message.getHeaderSection().getAnswerCount() + 1);
 
         try {
