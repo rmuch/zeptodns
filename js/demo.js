@@ -6,6 +6,6 @@ var response = MessageBuilder
     .begin()
     .asResponse(query.getMessage())
     .authoritative(true)
-    .withARecord(query.getMessage().getQuestions().get(0).getQuestionName(), "192.168.13.37")
-    .withARecord(query.getMessage().getQuestions().get(0).getQuestionName(), "192.168.13.38")
+    .withARecord(query.getMessage().getQuestions().get(0).getName(), "192.168.13.37")
+    .withARecord(query.getMessage().getQuestions().get(0).getName(), "192.168.13.38")
     .end();
