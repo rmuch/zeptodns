@@ -2,7 +2,7 @@ package zeptodns;
 
 import zeptodns.handlers.NashornHandler;
 import zeptodns.handlers.QueryHandler;
-import zeptodns.nio.NioServer;
+import zeptodns.nio.NioUdpTransport;
 
 import javax.script.ScriptException;
 import java.io.IOException;
@@ -16,21 +16,21 @@ import java.util.logging.Logger;
 public class ZeptoDNS implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(ZeptoDNS.class.getName());
 
-    private final Server server;
+    private final MessageTransport messageTransport;
     private final QueryHandler queryHandler;
 
-    public ZeptoDNS(Server server, QueryHandler queryHandler) {
-        this.server = server;
+    public ZeptoDNS(MessageTransport messageTransport, QueryHandler queryHandler) {
+        this.messageTransport = messageTransport;
         this.queryHandler = queryHandler;
 
-        server.setQueryHandler(queryHandler);
+        messageTransport.setQueryHandler(queryHandler);
     }
 
     @Override
     public void run() {
         LOGGER.log(Level.INFO, "Starting ZeptoDNS server...");
 
-        server.run();
+        messageTransport.run();
     }
 
     /**
@@ -39,7 +39,9 @@ public class ZeptoDNS implements Runnable {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        NioServer server = new NioServer(InetAddress.getLoopbackAddress(), 53);
+        NioUdpTransport server = new NioUdpTransport(InetAddress.getLoopbackAddress(), 53);
+
+        // TODO: Move listen interface and port configuration to a config file or console argument?
 
         // Check arguments
         if (args.length < 1) {

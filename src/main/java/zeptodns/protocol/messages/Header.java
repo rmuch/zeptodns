@@ -1,7 +1,7 @@
 package zeptodns.protocol.messages;
 
 /**
- * RFC 1035 header section.
+ * DNS message header section, as defined in RFC 1035 (4.1.1. Header section format).
  */
 public class Header {
     private int id;

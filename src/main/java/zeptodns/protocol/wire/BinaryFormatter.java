@@ -209,8 +209,8 @@ public class BinaryFormatter {
     /**
      * Writes a question section to a NIO buffer.
      *
-     * @param buffer the buffer to write to
-     * @param question     question section to write
+     * @param buffer   the buffer to write to
+     * @param question question section to write
      */
     public static void putQuestion(ByteBuffer buffer, Question question) {
         putOctetString(buffer, question.getName());
@@ -222,8 +222,8 @@ public class BinaryFormatter {
     /**
      * Writes a resource record to a NIO buffer.
      *
-     * @param buffer the buffer to write to
-     * @param resource    resource record to write
+     * @param buffer   the buffer to write to
+     * @param resource resource record to write
      */
     public static void putResourceRecord(ByteBuffer buffer, ResourceRecord resource) {
         putOctetString(buffer, resource.getName());

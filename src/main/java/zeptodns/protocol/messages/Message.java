@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * DNS message, as defined by RFC 1035 S. 4.1
+ * DNS message, as defined in RFC 1035 (4. MESSAGES).
  */
 public class Message {
     private Header header;

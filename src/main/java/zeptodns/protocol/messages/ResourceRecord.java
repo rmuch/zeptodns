@@ -1,7 +1,7 @@
 package zeptodns.protocol.messages;
 
 /**
- * DNS resource record.
+ * DNS message resource record, as defined in RFC 1035 (4.1.3. Resource record format).
  */
 public class ResourceRecord {
     /**
@@ -14,7 +14,7 @@ public class ResourceRecord {
      */
     public static final int AAAA = 28;
 
-    private String name; // len prefix (1) + string + null
+    private String name;
     private int type;
     private int classCode;
     private long timeToLive;

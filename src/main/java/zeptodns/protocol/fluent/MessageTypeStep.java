@@ -13,23 +13,23 @@ public interface MessageTypeStep {
     /**
      * Continues construction of the message as a response.
      *
-     * @return
+     * @return message builder
      */
     ResponseParameterStep asResponse();
 
     /**
      * Continues construction of the message as a response to a provided query message.
      *
-     * @param queryMessage
-     * @return
+     * @param queryMessage the query message which this is a response to
+     * @return message builder
      */
     ResponseParameterStep asResponse(Message queryMessage);
 
     /**
      * Continues construction of the message as a response with a provided ID.
      *
-     * @param id
-     * @return
+     * @param id the header query id
+     * @return message builder
      */
     ResponseParameterStep asResponse(int id);
 }

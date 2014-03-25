@@ -1,7 +1,7 @@
 package zeptodns.protocol.messages;
 
 /**
- * RFC 1035 question section.
+ * DNS message question section, as defined in RFC 1035 (4.1.2. Question section format).
  */
 public class Question {
     private String name;

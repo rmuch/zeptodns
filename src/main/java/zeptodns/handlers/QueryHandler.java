@@ -4,7 +4,7 @@ import zeptodns.protocol.messages.Query;
 import zeptodns.protocol.messages.Response;
 
 /**
- * Provides an interface for taking a query and returning a response.
+ * Provides a functional interface for processing a query and returning a response.
  */
 @FunctionalInterface
 public interface QueryHandler {

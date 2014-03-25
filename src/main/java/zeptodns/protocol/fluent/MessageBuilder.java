@@ -2,10 +2,12 @@ package zeptodns.protocol.fluent;
 
 import zeptodns.protocol.messages.Message;
 import zeptodns.protocol.messages.Question;
+import zeptodns.protocol.messages.records.AAAARecord;
 import zeptodns.protocol.messages.records.ARecord;
 import zeptodns.protocol.wire.FlagUtils;
 
 import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.UnknownHostException;
 import java.util.Random;
 
@@ -42,7 +44,7 @@ public class MessageBuilder implements
 
         // set a random id
         Random random = new Random();
-        int id = random.nextInt() & 0xFFFF;
+        int id = random.nextInt() & 0xFFFF; // ID must be 16-bit short, mask it
 
         message.getHeader().setId(id);
 
@@ -51,6 +53,8 @@ public class MessageBuilder implements
 
     public ResponseParameterStep asResponse() {
         int flags = message.getHeader().getFlags();
+
+        // set message QR flag
         flags = FlagUtils.setQueryResponse(flags, 1);
         message.getHeader().setFlags(flags);
 
@@ -75,6 +79,8 @@ public class MessageBuilder implements
 
     public ResponseParameterStep authoritative(boolean isAuthoritative) {
         int flags = message.getHeader().getFlags();
+
+        // set message authoritative flag
         flags = FlagUtils.setAuthoritative(flags, isAuthoritative ? 1 : 0);
         message.getHeader().setFlags(flags);
 
@@ -83,6 +89,8 @@ public class MessageBuilder implements
 
     public ResponseParameterStep withResponseCode(int responseCode) {
         int flags = message.getHeader().getFlags();
+
+        // set message response code flag
         flags = FlagUtils.setResponseCode(flags, responseCode);
         message.getHeader().setFlags(flags);
 
@@ -105,6 +113,21 @@ public class MessageBuilder implements
             ARecord aRecord = new ARecord(name, (Inet4Address) Inet4Address.getByName(addr));
 
             message.getAnswers().add(aRecord);
+        } catch (UnknownHostException e) {
+            // TODO: Pass this on?
+            e.printStackTrace();
+        }
+
+        return this;
+    }
+
+    public ResponseParameterStep withAAAARecord(String name, String addr) {
+        message.getHeader().setAnswerCount(message.getHeader().getAnswerCount() + 1);
+
+        try {
+            AAAARecord aaaaRecord = new AAAARecord(name, (Inet6Address) Inet6Address.getByName(addr));
+
+            message.getAnswers().add(aaaaRecord);
         } catch (UnknownHostException e) {
             // TODO: Pass this on?
             e.printStackTrace();

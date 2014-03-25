@@ -1,6 +1,6 @@
 package zeptodns.nio;
 
-import zeptodns.Server;
+import zeptodns.MessageTransport;
 import zeptodns.handlers.QueryHandler;
 import zeptodns.protocol.messages.Message;
 import zeptodns.protocol.messages.Query;
@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 /**
  * NIO connection handler.
  */
-public class NioServer implements Server {
-    private static final Logger LOGGER = Logger.getLogger(NioServer.class.getName());
+public class NioUdpTransport implements MessageTransport {
+    private static final Logger LOGGER = Logger.getLogger(NioUdpTransport.class.getName());
 
     private final InetAddress bindAddress;
     private final int bindPort;
@@ -32,7 +32,7 @@ public class NioServer implements Server {
     /**
      * Returns a new NIO server instance listening on the default port.
      */
-    public NioServer() {
+    public NioUdpTransport() {
         this(InetAddress.getLoopbackAddress(), 53);
     }
 
@@ -41,7 +41,7 @@ public class NioServer implements Server {
      *
      * @param port port to listen on
      */
-    public NioServer(int port) {
+    public NioUdpTransport(int port) {
         this(InetAddress.getLoopbackAddress(), port);
     }
 
@@ -51,7 +51,7 @@ public class NioServer implements Server {
      * @param address address to listen on
      * @param port    port to listen on
      */
-    public NioServer(InetAddress address, int port) {
+    public NioUdpTransport(InetAddress address, int port) {
         bindAddress = address;
         bindPort = port;
     }
@@ -67,7 +67,7 @@ public class NioServer implements Server {
     }
 
     /**
-     * Performs read operations on a NIO selection key.
+     * Performs read operations on a selected channel.
      *
      * @param key selection key
      * @throws IOException if an I/O error occurs
@@ -87,7 +87,8 @@ public class NioServer implements Server {
         Message requestMessage = BinaryFormatter.getMessage(queryStateAttachment.getRequestBuffer());
 
         if (queryHandler != null) {
-            Response response = queryHandler.handle(new Query(requestMessage));
+            Query query = new Query(requestMessage, queryStateAttachment.getRequestAddress());
+            Response response = queryHandler.handle(query);
 
             queryStateAttachment.getResponseBuffer().clear();
             BinaryFormatter.putMessage(queryStateAttachment.getResponseBuffer(), response.getMessage());
@@ -99,7 +100,7 @@ public class NioServer implements Server {
     }
 
     /**
-     * Performs write operations on a NIO selection key.
+     * Performs write operations on a selected channel.
      *
      * @param key selection key
      * @throws IOException if an I/O error occurs

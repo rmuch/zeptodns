@@ -1,5 +1,6 @@
 package zeptodns.handlers;
 
+import zeptodns.protocol.messages.Message;
 import zeptodns.protocol.messages.Query;
 import zeptodns.protocol.messages.Response;
 import zeptodns.util.FileUtils;
@@ -36,6 +37,6 @@ public class ScriptedHandler implements QueryHandler {
             e.printStackTrace();
         }
 
-        return null;
+        return new Response((Message) bindings.get("response"));
     }
 }
