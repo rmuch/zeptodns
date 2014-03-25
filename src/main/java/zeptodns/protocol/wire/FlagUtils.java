@@ -78,7 +78,7 @@ public class FlagUtils {
     }
 
     public static int setOpcode(int flags, int opcode) {
-        return setFlagValue(flags, FLAGS_OPCODE, 0x04, opcode);
+        return setFlagValue(flags, FLAGS_OPCODE, 0x0F, opcode);
     }
 
     public static int setAuthoritative(int flags, int aa) {
@@ -98,11 +98,11 @@ public class FlagUtils {
     }
 
     public static int setReserved(int flags, int z) {
-        return setFlagValue(flags, FLAGS_Z, 0x03, z);
+        return setFlagValue(flags, FLAGS_Z, 0x07, z);
     }
 
     public static int setResponseCode(int flags, int rcode) {
-        return setFlagValue(flags, FLAGS_RCODE, 0x04, rcode);
+        return setFlagValue(flags, FLAGS_RCODE, 0x0F, rcode);
     }
 
     public static int getQueryResponse(int flags) {
@@ -110,7 +110,7 @@ public class FlagUtils {
     }
 
     public static int getOpcode(int flags) {
-        return getFlagValue(flags, FLAGS_OPCODE, 0x04);
+        return getFlagValue(flags, FLAGS_OPCODE, 0x0F);
     }
 
     public static int getAuthoritative(int flags) {
@@ -130,10 +130,10 @@ public class FlagUtils {
     }
 
     public static int getReserved(int flags) {
-        return getFlagValue(flags, FLAGS_Z, 0x03);
+        return getFlagValue(flags, FLAGS_Z, 0x07);
     }
 
     public static int getResponseCode(int flags) {
-        return getFlagValue(flags, FLAGS_RCODE, 0x04);
+        return getFlagValue(flags, FLAGS_RCODE, 0x0F);
     }
 }
