@@ -1,8 +1,8 @@
 package zeptodns.protocol.wire;
 
-import zeptodns.protocol.messages.HeaderSection;
+import zeptodns.protocol.messages.Header;
 import zeptodns.protocol.messages.Message;
-import zeptodns.protocol.messages.QuestionSection;
+import zeptodns.protocol.messages.Question;
 import zeptodns.protocol.messages.ResourceRecord;
 
 import java.nio.ByteBuffer;
@@ -22,11 +22,13 @@ public class BinaryFormatter {
     public static String getOctetString(ByteBuffer buffer) {
         StringBuilder stringBuilder = new StringBuilder();
 
+        // read octet containing the length until we get to null
         byte strLen;
-        while ((strLen = buffer.get()) != 0) {
+        while ((strLen = buffer.get()) != 0x00) {
             byte[] strBytes = new byte[strLen];
             buffer.get(strBytes);
 
+            // append that to the string builder followed by the separator character
             stringBuilder.append(new String(strBytes));
             stringBuilder.append('.');
         }
@@ -43,32 +45,32 @@ public class BinaryFormatter {
     public static Message getMessage(ByteBuffer buffer) {
         Message message = new Message();
 
-        HeaderSection header = getHeader(buffer);
-        message.setHeaderSection(header);
+        Header header = getHeader(buffer);
+        message.setHeader(header);
 
-        List<QuestionSection> questions = message.getQuestions();
+        List<Question> questions = message.getQuestions();
         List<ResourceRecord> answers = message.getAnswers();
         List<ResourceRecord> authority = message.getAuthority();
         List<ResourceRecord> additional = message.getAdditional();
 
         for (int i = 0; i < header.getQuestionCount(); i++) {
-            QuestionSection qs = getQuestionSection(buffer);
-            questions.add(qs);
+            Question question = getQuestion(buffer);
+            questions.add(question);
         }
 
         for (int i = 0; i < header.getAnswerCount(); i++) {
-            ResourceRecord rr = getResourceRecord(buffer);
-            answers.add(rr);
+            ResourceRecord resource = getResourceRecord(buffer);
+            answers.add(resource);
         }
 
         for (int i = 0; i < header.getNameServerCount(); i++) {
-            ResourceRecord rr = getResourceRecord(buffer);
-            authority.add(rr);
+            ResourceRecord resource = getResourceRecord(buffer);
+            authority.add(resource);
         }
 
         for (int i = 0; i < header.getAdditionalCount(); i++) {
-            ResourceRecord rr = getResourceRecord(buffer);
-            additional.add(rr);
+            ResourceRecord resource = getResourceRecord(buffer);
+            additional.add(resource);
         }
 
         return message;
@@ -80,7 +82,7 @@ public class BinaryFormatter {
      * @param buffer the buffer to read from
      * @return header section from the buffer
      */
-    public static HeaderSection getHeader(ByteBuffer buffer) {
+    public static Header getHeader(ByteBuffer buffer) {
         buffer.order(ByteOrder.BIG_ENDIAN);
 
         int id;
@@ -97,7 +99,7 @@ public class BinaryFormatter {
         nameServerCount = buffer.getShort();
         additionalCount = buffer.getShort();
 
-        return new HeaderSection(id, flags, questionCount, answerCount, nameServerCount, additionalCount);
+        return new Header(id, flags, questionCount, answerCount, nameServerCount, additionalCount);
     }
 
     /**
@@ -106,13 +108,13 @@ public class BinaryFormatter {
      * @param buffer the buffer to read from
      * @return question section from the buffer
      */
-    public static QuestionSection getQuestionSection(ByteBuffer buffer) {
+    public static Question getQuestion(ByteBuffer buffer) {
         String name = getOctetString(buffer);
 
-        int qtype = (int) buffer.getShort();
-        int qclass = (int) buffer.getShort();
+        int type = (int) buffer.getShort();
+        int clasz = (int) buffer.getShort();
 
-        return new QuestionSection(name, qtype, qclass);
+        return new Question(name, type, clasz);
     }
 
     /**
@@ -127,18 +129,18 @@ public class BinaryFormatter {
         int type = (int) buffer.getShort();
         int clasz = (int) buffer.getShort();
         long ttl = (long) buffer.getInt();
-        int rdlength = (int) buffer.getShort();
+        int resourceDataLength = (int) buffer.getShort();
 
-        byte[] rdata = new byte[rdlength];
-        buffer.get(rdata);
+        byte[] resourceData = new byte[resourceDataLength];
+        buffer.get(resourceData);
 
         ResourceRecord resourceRecord = new ResourceRecord();
         resourceRecord.setName(name);
         resourceRecord.setType(type);
         resourceRecord.setClassCode(clasz);
         resourceRecord.setTimeToLive(ttl);
-        resourceRecord.setResourceDataLength(rdlength);
-        resourceRecord.setResourceData(rdata);
+        resourceRecord.setResourceDataLength(resourceDataLength);
+        resourceRecord.setResourceData(resourceData);
 
         return resourceRecord;
     }
@@ -152,11 +154,13 @@ public class BinaryFormatter {
     public static void putOctetString(ByteBuffer buffer, String string) {
         String[] parts = string.split("\\.");
 
+        // a single octet contains a length prefix, followed by that number of characters
         for (String part : parts) {
             buffer.put((byte) part.length());
             buffer.put(part.getBytes());
         }
 
+        // the string is finally terminated by 0x00
         buffer.put((byte) 0x00);
     }
 
@@ -167,10 +171,10 @@ public class BinaryFormatter {
      * @param message message to write
      */
     public static void putMessage(ByteBuffer buffer, Message message) {
-        putHeader(buffer, message.getHeaderSection());
+        putHeader(buffer, message.getHeader());
 
-        for (QuestionSection questionSection : message.getQuestions()) {
-            putQuestionSection(buffer, questionSection);
+        for (Question question : message.getQuestions()) {
+            putQuestion(buffer, question);
         }
 
         for (ResourceRecord resourceRecord : message.getAnswers()) {
@@ -192,7 +196,7 @@ public class BinaryFormatter {
      * @param buffer the buffer to write to
      * @param header header to write
      */
-    public static void putHeader(ByteBuffer buffer, HeaderSection header) {
+    public static void putHeader(ByteBuffer buffer, Header header) {
         // Header sections are 12 bytes long, see RFC 1035 S 4.1.1.
         buffer.putShort((short) header.getId());
         buffer.putShort((short) header.getFlags());
@@ -206,28 +210,28 @@ public class BinaryFormatter {
      * Writes a question section to a NIO buffer.
      *
      * @param buffer the buffer to write to
-     * @param qs     question section to write
+     * @param question     question section to write
      */
-    public static void putQuestionSection(ByteBuffer buffer, QuestionSection qs) {
-        putOctetString(buffer, qs.getQuestionName());
+    public static void putQuestion(ByteBuffer buffer, Question question) {
+        putOctetString(buffer, question.getName());
 
-        buffer.putShort((short) qs.getQuestionType());
-        buffer.putShort((short) qs.getQuestionClass());
+        buffer.putShort((short) question.getType());
+        buffer.putShort((short) question.getClasz());
     }
 
     /**
      * Writes a resource record to a NIO buffer.
      *
      * @param buffer the buffer to write to
-     * @param res    resource record to write
+     * @param resource    resource record to write
      */
-    public static void putResourceRecord(ByteBuffer buffer, ResourceRecord res) {
-        putOctetString(buffer, res.getName());
+    public static void putResourceRecord(ByteBuffer buffer, ResourceRecord resource) {
+        putOctetString(buffer, resource.getName());
 
-        buffer.putShort((short) res.getType());
-        buffer.putShort((short) res.getClassCode());
-        buffer.putInt((int) res.getTimeToLive());
-        buffer.putShort((short) res.getResourceDataLength());
-        buffer.put(res.getResourceData());
+        buffer.putShort((short) resource.getType());
+        buffer.putShort((short) resource.getClassCode());
+        buffer.putInt((int) resource.getTimeToLive());
+        buffer.putShort((short) resource.getResourceDataLength());
+        buffer.put(resource.getResourceData());
     }
 }

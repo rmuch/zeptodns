@@ -7,33 +7,33 @@ import java.util.List;
  * DNS message, as defined by RFC 1035 S. 4.1
  */
 public class Message {
-    private HeaderSection headerSection;
-    private List<QuestionSection> questions;
+    private Header header;
+    private List<Question> questions;
     private List<ResourceRecord> answers;
     private List<ResourceRecord> authority;
     private List<ResourceRecord> additional;
 
     public Message() {
-        headerSection = new HeaderSection();
+        header = new Header();
         questions = new LinkedList<>();
         answers = new LinkedList<>();
         authority = new LinkedList<>();
         additional = new LinkedList<>();
     }
 
-    public HeaderSection getHeaderSection() {
-        return headerSection;
+    public Header getHeader() {
+        return header;
     }
 
-    public void setHeaderSection(HeaderSection headerSection) {
-        this.headerSection = headerSection;
+    public void setHeader(Header header) {
+        this.header = header;
     }
 
-    public List<QuestionSection> getQuestions() {
+    public List<Question> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<QuestionSection> questions) {
+    public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
 

@@ -1,7 +1,7 @@
 package zeptodns.protocol.fluent;
 
 import zeptodns.protocol.messages.Message;
-import zeptodns.protocol.messages.QuestionSection;
+import zeptodns.protocol.messages.Question;
 import zeptodns.protocol.messages.records.ARecord;
 import zeptodns.protocol.wire.FlagUtils;
 
@@ -36,23 +36,23 @@ public class MessageBuilder implements
     }
 
     public QueryParameterStep asQuery() {
-        int flags = message.getHeaderSection().getFlags();
+        int flags = message.getHeader().getFlags();
         flags = FlagUtils.setQueryResponse(flags, 0);
-        message.getHeaderSection().setFlags(flags);
+        message.getHeader().setFlags(flags);
 
         // set a random id
         Random random = new Random();
         int id = random.nextInt() & 0xFFFF;
 
-        message.getHeaderSection().setId(id);
+        message.getHeader().setId(id);
 
         return this;
     }
 
     public ResponseParameterStep asResponse() {
-        int flags = message.getHeaderSection().getFlags();
+        int flags = message.getHeader().getFlags();
         flags = FlagUtils.setQueryResponse(flags, 1);
-        message.getHeaderSection().setFlags(flags);
+        message.getHeader().setFlags(flags);
 
         return this;
     }
@@ -60,7 +60,7 @@ public class MessageBuilder implements
     public ResponseParameterStep asResponse(Message queryMessage) {
         asResponse();
 
-        message.getHeaderSection().setId(queryMessage.getHeaderSection().getId());
+        message.getHeader().setId(queryMessage.getHeader().getId());
 
         return this;
     }
@@ -68,38 +68,38 @@ public class MessageBuilder implements
     public ResponseParameterStep asResponse(int id) {
         asResponse();
 
-        message.getHeaderSection().setId(id);
+        message.getHeader().setId(id);
 
         return this;
     }
 
     public ResponseParameterStep authoritative(boolean isAuthoritative) {
-        int flags = message.getHeaderSection().getFlags();
+        int flags = message.getHeader().getFlags();
         flags = FlagUtils.setAuthoritative(flags, isAuthoritative ? 1 : 0);
-        message.getHeaderSection().setFlags(flags);
+        message.getHeader().setFlags(flags);
 
         return this;
     }
 
     public ResponseParameterStep withResponseCode(int responseCode) {
-        int flags = message.getHeaderSection().getFlags();
+        int flags = message.getHeader().getFlags();
         flags = FlagUtils.setResponseCode(flags, responseCode);
-        message.getHeaderSection().setFlags(flags);
+        message.getHeader().setFlags(flags);
 
         return this;
     }
 
     public QueryParameterStep withQuestion(String name, int type, int clasz) {
-        message.getHeaderSection().setQuestionCount(message.getHeaderSection().getQuestionCount() + 1);
+        message.getHeader().setQuestionCount(message.getHeader().getQuestionCount() + 1);
 
-        QuestionSection questionSection = new QuestionSection(name, type, clasz);
-        message.getQuestions().add(questionSection);
+        Question question = new Question(name, type, clasz);
+        message.getQuestions().add(question);
 
         return this;
     }
 
     public ResponseParameterStep withARecord(String name, String addr) {
-        message.getHeaderSection().setAnswerCount(message.getHeaderSection().getAnswerCount() + 1);
+        message.getHeader().setAnswerCount(message.getHeader().getAnswerCount() + 1);
 
         try {
             ARecord aRecord = new ARecord(name, (Inet4Address) Inet4Address.getByName(addr));

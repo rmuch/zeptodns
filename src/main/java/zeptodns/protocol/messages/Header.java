@@ -3,7 +3,7 @@ package zeptodns.protocol.messages;
 /**
  * RFC 1035 header section.
  */
-public class HeaderSection {
+public class Header {
     private int id;
     private int flags;
     private int questionCount;
@@ -11,10 +11,10 @@ public class HeaderSection {
     private int nameServerCount;
     private int additionalCount;
 
-    public HeaderSection() {
+    public Header() {
     }
 
-    public HeaderSection(int id, int flags, int questionCount, int answerCount, int nameServerCount, int additionalCount) {
+    public Header(int id, int flags, int questionCount, int answerCount, int nameServerCount, int additionalCount) {
         this.id = id;
         this.flags = flags;
         this.questionCount = questionCount;

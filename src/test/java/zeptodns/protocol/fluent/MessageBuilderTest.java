@@ -17,7 +17,7 @@ public class MessageBuilderTest {
                 .asQuery()
                 .end();
 
-        assertEquals(FlagUtils.getQueryResponse(message.getHeaderSection().getFlags()), 0);
+        assertEquals(FlagUtils.getQueryResponse(message.getHeader().getFlags()), 0);
     }
 
     @Test
@@ -27,6 +27,6 @@ public class MessageBuilderTest {
                 .asResponse()
                 .end();
 
-        assertEquals(FlagUtils.getQueryResponse(message.getHeaderSection().getFlags()), 1);
+        assertEquals(FlagUtils.getQueryResponse(message.getHeader().getFlags()), 1);
     }
 }

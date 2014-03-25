@@ -4,7 +4,7 @@ package zeptodns.protocol.messages;
  * DNS query.
  */
 public class Query {
-    Message message;
+    private Message message;
 
     public Query(Message requestMessage) {
         message = requestMessage;

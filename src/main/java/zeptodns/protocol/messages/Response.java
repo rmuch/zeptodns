@@ -4,7 +4,7 @@ package zeptodns.protocol.messages;
  * DNS response.
  */
 public class Response {
-    Message message;
+    private Message message;
 
     public Response(Message responseMessage) {
         message = responseMessage;
