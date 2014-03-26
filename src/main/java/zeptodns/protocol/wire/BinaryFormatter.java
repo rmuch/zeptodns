@@ -173,21 +173,10 @@ public class BinaryFormatter {
     public static void putMessage(ByteBuffer buffer, Message message) {
         putHeader(buffer, message.getHeader());
 
-        for (Question question : message.getQuestions()) {
-            putQuestion(buffer, question);
-        }
-
-        for (ResourceRecord resourceRecord : message.getAnswers()) {
-            putResourceRecord(buffer, resourceRecord);
-        }
-
-        for (ResourceRecord resourceRecord : message.getAuthority()) {
-            putResourceRecord(buffer, resourceRecord);
-        }
-
-        for (ResourceRecord resourceRecord : message.getAdditional()) {
-            putResourceRecord(buffer, resourceRecord);
-        }
+        message.getQuestions().forEach(q -> putQuestion(buffer, q));
+        message.getAnswers().forEach(r -> putResourceRecord(buffer, r));
+        message.getAuthority().forEach(r -> putResourceRecord(buffer, r));
+        message.getAdditional().forEach(r -> putResourceRecord(buffer, r));
     }
 
     /**
