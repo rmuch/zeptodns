@@ -12,15 +12,14 @@ import javax.script.ScriptException;
 import java.io.IOException;
 
 /**
- * Handles queries using a Java Script Engine script.
+ * Passes queries to any scripting language supported by the JSR 223 (Scripting for the Java Platform) API.
  */
 public class ScriptedHandler implements QueryHandler {
-    private final ScriptEngineManager scriptEngineManager;
     private final ScriptEngine scriptEngine;
     private final String script;
 
     public ScriptedHandler(String path, String engineName) throws IOException {
-        scriptEngineManager = new ScriptEngineManager();
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
         scriptEngine = scriptEngineManager.getEngineByName(engineName);
 
         script = FileUtils.readAll(path);
