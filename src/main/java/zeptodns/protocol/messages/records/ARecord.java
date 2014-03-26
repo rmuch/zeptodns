@@ -34,7 +34,7 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public void setType(int type) {
-        throw new IllegalArgumentException("setType may not be called on type ARecord.");
+        throw new UnsupportedOperationException("setType may not be called on type ARecord.");
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public void setClassCode(int classCode) {
-        throw new IllegalArgumentException("setClassCode may not be called on type ARecord.");
+        throw new UnsupportedOperationException("setClassCode may not be called on type ARecord.");
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public void setResourceDataLength(int resourceDataLength) {
-        throw new IllegalArgumentException("setResourceDataLength may not be called on type ARecord.");
+        throw new UnsupportedOperationException("setResourceDataLength may not be called on type ARecord.");
     }
 
     @Override
@@ -64,6 +64,6 @@ public class ARecord extends ResourceRecord {
 
     @Override
     public void setResourceData(byte[] resourceData) {
-        throw new IllegalArgumentException("setResourceData may not be called on type ARecord.");
+        throw new UnsupportedOperationException("setResourceData may not be called on type ARecord.");
     }
 }
