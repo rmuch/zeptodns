@@ -169,6 +169,10 @@ public class NioUdpTransport implements MessageTransport {
                             e.printStackTrace();
                         }
                     }
+
+                    if (!selector.isOpen()) {
+                        break;
+                    }
                 } catch (IOException e) {
                     // Handle problem selecting.
                     LOGGER.log(Level.SEVERE, "Error selecting:\n" + e.toString());
