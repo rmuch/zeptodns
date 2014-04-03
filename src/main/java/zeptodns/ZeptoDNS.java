@@ -1,5 +1,6 @@
 package zeptodns;
 
+import org.apache.commons.cli.*;
 import zeptodns.handlers.NashornHandler;
 import zeptodns.handlers.QueryHandler;
 import zeptodns.nio.NioUdpTransport;
@@ -39,21 +40,49 @@ public class ZeptoDNS implements Runnable {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        NioUdpTransport server = new NioUdpTransport(InetAddress.getLoopbackAddress(), 53);
+        int port = 53; // Listen on 53 by default.
+        String scriptPath;
 
-        // TODO: Move listen interface and port configuration to a config file or console argument?
+        // set up options
+        Options options = new Options();
+        options.addOption("p", "port", true, "UDP port to listen on");
+        options.addOption("s", "script", true, "path to script file");
 
-        // Check arguments
-        if (args.length < 1) {
-            LOGGER.severe("No console arguments provided. Required: java -jar zeptodns.jar [script-path].");
+        // parse
+        CommandLineParser parser = new GnuParser();
+
+        try {
+            CommandLine commandLine = parser.parse(options, args);
+
+            if (commandLine.hasOption("p")) {
+                port = Integer.parseInt(commandLine.getOptionValue("p"));
+            }
+
+            if (commandLine.hasOption("s")) {
+                scriptPath = commandLine.getOptionValue("s");
+            } else {
+                System.err.println("error: script file not provided");
+
+                HelpFormatter helpFormatter = new HelpFormatter();
+                helpFormatter.printHelp("zeptodns", options);
+
+                return;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+            HelpFormatter helpFormatter = new HelpFormatter();
+            helpFormatter.printHelp("zeptodns", options);
 
             return;
         }
 
+        NioUdpTransport server = new NioUdpTransport(InetAddress.getLoopbackAddress(), port);
+
         // Attempt to set up query handler
         QueryHandler queryHandler;
         try {
-            queryHandler = new NashornHandler(args[0]);
+            queryHandler = new NashornHandler(scriptPath);
         } catch (IOException e) {
             LOGGER.severe("Could not read script provided as argument:\n" + e.getMessage());
 
