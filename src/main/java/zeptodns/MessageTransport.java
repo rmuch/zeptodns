@@ -8,12 +8,14 @@ import zeptodns.handlers.QueryHandler;
 public interface MessageTransport extends Runnable {
     /**
      * Returns the handler for queries accepted by this server.
+     *
      * @return the QueryHandler assigned to this server
      */
     QueryHandler getQueryHandler();
 
     /**
      * Sets the handler for queries accepted by this server.
+     *
      * @param queryHandler the QueryHandler assigned to this server
      */
     void setQueryHandler(QueryHandler queryHandler);

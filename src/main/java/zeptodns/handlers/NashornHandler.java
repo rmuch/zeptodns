@@ -22,8 +22,8 @@ public class NashornHandler implements QueryHandler {
     /**
      * Creates a new Nashorn query handler with a precompiled script.
      *
-     * @throws IOException if there is an error reading the
      * @param path path to the script file to load script file
+     * @throws IOException     if there is an error reading the script
      * @throws ScriptException if there is an error precompiling the script
      */
     public NashornHandler(String path) throws IOException, ScriptException {
